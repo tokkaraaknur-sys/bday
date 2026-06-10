@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* Все стили без изменений */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Montserrat', sans-serif;
@@ -235,7 +236,7 @@
         // Флаг – играет ли сейчас романтическая музыка
         let romanticPlaying = false;
 
-        // Остановить всё, кроме романтической (если мы не хотим её трогать)
+        // Остановить всё, кроме романтической
         function stopAllExceptRomantic() {
             startMusic.pause();
             startMusic.currentTime = 0;
@@ -255,7 +256,7 @@
             romanticPlaying = false;
         }
 
-        // Запустить стартовую музыку (с днём рождения)
+        // Запустить стартовую музыку
         function playStart() {
             stopAll();
             startMusic.play().catch(() => {});
@@ -263,42 +264,44 @@
 
         // Запустить романтическую музыку
         function playRomantic() {
-            stopAllExceptRomantic(); // не останавливаем романтику, если она уже играет – но мы её запускаем
-            romanticMusic.play().catch(() => {});
-            romanticPlaying = true;
+            // Не останавливаем её, если уже играет
+            if (!romanticPlaying) {
+                stopAllExceptRomantic();
+                romanticMusic.play().catch(() => {});
+                romanticPlaying = true;
+            }
         }
 
         // При загрузке пытаемся сразу запустить стартовую музыку
         window.addEventListener('load', function() {
             startMusic.play().then(() => {
                 console.log('Стартовая музыка играет');
-            }).catch(() => {
-                // Если не получилось, то при первом клике на "Open 🎁" запустим
-            });
+            }).catch(() => {});
         });
 
         // ---------- ЭКРАНЫ ----------
         function nextScreen(screenNum) {
-            // Переключаем экран
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('sc' + screenNum).classList.add('active');
             
             if (screenNum === 2) {
-                // Если стартовая музыка ещё не играет, запускаем её
+                // На экране с тортиком – стартовая музыка
                 if (startMusic.paused && !romanticPlaying) {
                     playStart();
                 }
             } else if (screenNum === 3) {
-                // На экране "these are for you" романтическая музыка уже должна играть (её запустили в clickCake)
-                // Ничего не делаем, она продолжает играть
+                // На экране "these are for you" – романтика уже играет (запущена в clickCake)
             } else if (screenNum === 4) {
-                // При переходе в меню выбора – останавливаем романтику? Нет, пусть играет фоном
-                // Но если пользователь захочет послушать музыку в плейлисте, то при открытии choice-music мы её остановим
+                // В меню – романтика продолжает играть (если она играла)
+                // Если пользователь пришёл из choice-music, то романтика выключена – надо включить
+                if (!romanticPlaying) {
+                    playRomantic();
+                }
             }
         }
 
         function clickCake() {
-            // Сначала запускаем романтическую музыку
+            // Запускаем романтическую музыку (она будет играть везде, кроме choice-music)
             playRomantic();
             
             // Конфетти
@@ -322,13 +325,23 @@
                 });
             }, 500);
             
-            // Переключаем на экран 3
             nextScreen(3);
         }
 
         function playSong(num) {
-            // При выборе песни останавливаем романтику и все песни
-            stopAll();
+            // В разделе музыки – останавливаем романтику и играем только выбранную песню
+            romanticMusic.pause();
+            romanticMusic.currentTime = 0;
+            romanticPlaying = false;
+            
+            // Останавливаем все песни
+            song1.pause();
+            song1.currentTime = 0;
+            song2.pause();
+            song2.currentTime = 0;
+            song3.pause();
+            song3.currentTime = 0;
+            
             // Играем выбранную
             switch(num) {
                 case 1: song1.play(); break;
@@ -338,14 +351,22 @@
         }
 
         function openChoice(id) {
-            // При входе в любой раздел: если это не музыка, то оставляем романтику играть?
-            // Логика: если зашли в музыку – останавливаем всё (чтобы не мешало)
-            // Если в фото или письмо – пусть романтика играет фоном
             if (id === 'choice-music') {
-                stopAll(); // Останавливаем всё, включая романтику
-            } else {
-                // Для фото и письма – не трогаем романтику, но останавливаем песни плейлиста
+                // В музыке – выключаем романтику, чтобы не мешала
+                romanticMusic.pause();
+                romanticMusic.currentTime = 0;
+                romanticPlaying = false;
+                // Останавливаем песни плейлиста (на всякий случай)
                 stopAllExceptRomantic();
+            } else {
+                // В фото и письме – романтика должна играть
+                // Если она выключена (например, вернулись из музыки) – включаем
+                if (!romanticPlaying) {
+                    playRomantic();
+                } else {
+                    // Если играет – ничего не делаем, просто останавливаем песни
+                    stopAllExceptRomantic();
+                }
             }
             
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -357,9 +378,14 @@
         }
 
         function backToMenu() {
-            // Возврат в меню – оставляем романтику играть (если она играла)
-            // Но если играла какая-то песня из плейлиста, её останавливаем
+            // Возвращаемся в меню
+            // Если играла песня из плейлиста – останавливаем
+            // И включаем романтику (если она не играет)
             stopAllExceptRomantic();
+            if (!romanticPlaying) {
+                playRomantic();
+            }
+            
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('sc4').classList.add('active');
         }
