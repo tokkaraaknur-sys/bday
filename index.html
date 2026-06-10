@@ -21,7 +21,6 @@
             text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
         }
 
-        /* Общие стили для экранов */
         .screen {
             position: absolute;
             width: 100%;
@@ -43,7 +42,6 @@
             pointer-events: auto;
         }
 
-        /* Экран 1 */
         .main-title { font-size: 3rem; margin-bottom: 10px; font-weight: 700; letter-spacing: 2px; }
         .subtitle { font-size: 1.4rem; opacity: 0.9; margin-bottom: 30px; }
         .next-btn {
@@ -53,15 +51,12 @@
         }
         .next-btn:hover { transform: scale(1.05); }
 
-        /* Экран 2: Тортик */
         .cake-btn { font-size: 7rem; cursor: pointer; user-select: none; margin: 20px 0; animation: pulse 1.5s infinite; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.15)); }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-        /* Экран 3 */
         .romantic-title { font-family: 'Caveat', cursive; font-size: 5rem; margin-bottom: 10px; }
         .small-hint { font-size: 1.1rem; opacity: 0.8; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* Экран 4: Меню */
         .menu-container { display: flex; gap: 20px; width: 100%; max-width: 900px; justify-content: center; flex-wrap: wrap; }
         .menu-card {
             background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
@@ -73,13 +68,11 @@
         .menu-card h3 { font-size: 1.3rem; margin-bottom: 10px; }
         .back-to-menu { margin-top: 30px; background: rgba(0,0,0,0.1); border: 1px solid white; color: white; padding: 10px 25px; border-radius: 50px; cursor: pointer; }
 
-        /* Раздел: Музыка */
         .music-list { width: 100%; max-width: 500px; text-align: left; background: rgba(255,255,255,0.15); padding: 20px; border-radius: 20px; }
         .music-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.2); }
         .music-item:last-child { border-bottom: none; }
         .music-item span { font-size: 0.95rem; font-weight: 600; padding-right: 10px; }
 
-        /* Раздел: Фотографии */
         .photo-stack { position: relative; width: 320px; height: 380px; margin-bottom: 20px; }
         .polaroid {
             position: absolute; width: 100%; height: 100%; background: white; padding: 15px 15px 45px 15px;
@@ -94,7 +87,6 @@
         .p4 { transform: rotate(5deg); z-index: 2; }
         .p5 { transform: rotate(-2deg); z-index: 1; }
 
-        /* Раздел: Письмо */
         .envelope-wrapper { position: relative; cursor: pointer; margin-bottom: 20px; }
         .envelope { font-size: 6rem; transition: 0.3s; }
         .letter-box {
@@ -108,6 +100,10 @@
 
     <audio id="bg-romantic" src="alexgrohl-gentle-496449.mp3" loop></audio>
     <audio id="bg-start" src="Masha_i_Medved_-_S_Dnem_Rozhdeniya_MENYA_74147456.mp3" loop></audio>
+    <!-- Плейлист -->
+    <audio id="song1" src="Rihanna_-_Disturbia_47962188.mp3"></audio>
+    <audio id="song2" src="Rihanna - Rude Boy.mp3"></audio>
+    <audio id="song3" src="Rihanna_-_Where_Have_You_Been_48211610.mp3"></audio>
 
     <div class="screen active" id="sc1">
         <h1 class="main-title">Happy Birthday, Aizere! 🤍</h1>
@@ -152,15 +148,15 @@
         <div class="music-list">
             <div class="music-item">
                 <span>1. Rihanna — Disturbia</span>
-                <audio controls><source src="Rihanna_-_Disturbia_47962188.mp3" type="audio/mpeg"></audio>
+                <button class="next-btn" style="padding: 8px 20px; font-size: 0.9rem;" onclick="playSong(1)">▶ Play</button>
             </div>
             <div class="music-item">
                 <span>2. Rihanna — Rude Boy</span>
-                <audio controls><source src="Rihanna - Rude Boy.mp3" type="audio/mpeg"></audio>
+                <button class="next-btn" style="padding: 8px 20px; font-size: 0.9rem;" onclick="playSong(2)">▶ Play</button>
             </div>
             <div class="music-item">
                 <span>3. Rihanna — Where Have You Been</span>
-                <audio controls><source src="Rihanna_-_Where_Have_You_Been_48211610.mp3" type="audio/mpeg"></audio>
+                <button class="next-btn" style="padding: 8px 20px; font-size: 0.9rem;" onclick="playSong(3)">▶ Play</button>
             </div>
         </div>
         <button class="back-to-menu" onclick="backToMenu()">◀ Back to the menu</button>
@@ -215,6 +211,14 @@
     <script>
         const startMusic = document.getElementById('bg-start');
         const romanticMusic = document.getElementById('bg-romantic');
+        const song1 = document.getElementById('song1');
+        const song2 = document.getElementById('song2');
+        const song3 = document.getElementById('song3');
+
+        // Автоматическое воспроизведение при загрузке
+        window.addEventListener('load', function() {
+            startMusic.play().catch(e => console.log("Автовоспроизведение заблокировано"));
+        });
 
         function nextScreen(screenNum) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -229,17 +233,65 @@
             startMusic.pause(); 
             romanticMusic.play().catch(e => console.log("Включилась романтичная музыка")); 
             
-            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+            // Больше конфити со взрывом
+            confetti({
+                particleCount: 300,
+                spread: 120,
+                origin: { y: 0.6 },
+                startVelocity: 45,
+                ticks: 200
+            });
+            
+            // Второй залп через 0.5 сек
+            setTimeout(() => {
+                confetti({
+                    particleCount: 200,
+                    spread: 100,
+                    origin: { y: 0.5, x: 0.3 }
+                });
+                confetti({
+                    particleCount: 200,
+                    spread: 100,
+                    origin: { y: 0.5, x: 0.7 }
+                });
+            }, 500);
+            
             nextScreen(3);
+        }
+
+        function playSong(num) {
+            // Останавливаем романтическую музыку
+            romanticMusic.pause();
+            romanticMusic.currentTime = 0;
+            
+            // Останавливаем все песни
+            song1.pause();
+            song1.currentTime = 0;
+            song2.pause();
+            song2.currentTime = 0;
+            song3.pause();
+            song3.currentTime = 0;
+            
+            // Играем выбранную
+            switch(num) {
+                case 1: song1.play(); break;
+                case 2: song2.play(); break;
+                case 3: song3.play(); break;
+            }
         }
 
         function openChoice(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             
+            if(id === 'choice-music') {
+                // Останавливаем романтическую музыку когда заходим в плейлист
+                romanticMusic.pause();
+                romanticMusic.currentTime = 0;
+            }
+            
             if(id === 'choice-photos' || id === 'choice-letter') {
-                confetti({ particleCount: 30, angle: 60, spread: 55, origin: { x: 0 } });
-                confetti({ particleCount: 30, angle: 120, spread: 55, origin: { x: 1 } });
+                confetti({ particleCount: 50, spread: 60 });
             }
         }
 
@@ -264,7 +316,7 @@
         function openLetter() {
             document.getElementById('env-wrap').style.display = 'none';
             document.getElementById('l-box').style.display = 'block';
-            confetti({ particleCount: 50, spread: 60 });
+            confetti({ particleCount: 100, spread: 80 });
         }
     </script>
 </body>
