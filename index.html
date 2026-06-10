@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* Все стили без изменений (такие же как у тебя) */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Montserrat', sans-serif;
@@ -200,23 +201,16 @@
         
         <div class="letter-box" id="l-box">
             <h3 style="margin-bottom: 15px; color: #ff6b6b; font-family: 'Caveat', cursive; font-size: 2.5rem;">Моя ослепительная и любимая Айзере!</h3>
-            <p>С днём рождения, моя самая любимая подруга!
-
-Я очень благодарна судьбе за то, что я когда то перевелась в ваш класс, а далее встретила тебя . Ты человек, который делает мою жизнь ярче, теплее и счастливее просто своим присутствием. Спасибо тебе за все наши разговоры до ночи, за смех до слёз, за поддержку в самые трудные моменты и за то, что рядом с тобой я всегда могу быть собой.
-
-Я искренне желаю тебе огромного счастья, крепкого здоровья и исполнения всех твоих желаний. Пусть рядом будут только любящие и искренние люди, пусть каждый новый день приносит тебе по больше радости и множество поводов улыбаться. Ты заслуживаешь всего самого прекрасного в этом мире.
-
-Помни, что я всегда буду рядом — в счастливые моменты, в сложные дни и во всех твоих новых начинаниях. Спасибо тебе за нашу дружбу. Для меня она бесценна.
-
-Люблю тебя и очень дорожу тобой. С твоим днём, моя лучшая подруга! ❤️</p>
-
-<br>Маленький стих:
-
-Спасибо жизни за тебя,
-За смех, поддержку и тепло.
-Сквозь годы дружба наша крепнет,
-И мне с тобой так повезло.</br>
-
+            <p>С днём рождения, моя самая любимая подруга!<br><br>
+Я очень благодарна судьбе за то, что я когда то перевелась в ваш класс, а далее встретила тебя . Ты человек, который делает мою жизнь ярче, теплее и счастливее просто своим присутствием. Спасибо тебе за все наши разговоры до ночи, за смех до слёз, за поддержку в самые трудные моменты и за то, что рядом с тобой я всегда могу быть собой.<br><br>
+Я искренне желаю тебе огромного счастья, крепкого здоровья и исполнения всех твоих желаний. Пусть рядом будут только любящие и искренние люди, пусть каждый новый день приносит тебе по больше радости и множество поводов улыбаться. Ты заслуживаешь всего самого прекрасного в этом мире.<br><br>
+Помни, что я всегда буду рядом — в счастливые моменты, в сложные дни и во всех твоих новых начинаниях. Спасибо тебе за нашу дружбу. Для меня она бесценна.<br><br>
+Люблю тебя и очень дорожу тобой. С твоим днём, моя лучшая подруга! ❤️<br><br>
+Маленький стих:<br>
+Спасибо жизни за тебя,<br>
+За смех, поддержку и тепло.<br>
+Сквозь годы дружба наша крепнет,<br>
+И мне с тобой так повезло.</p>
         </div>
         
         <button class="back-to-menu" onclick="backToMenu()">◀ Back to the menu</button>
@@ -231,17 +225,30 @@
         const song2 = document.getElementById('song2');
         const song3 = document.getElementById('song3');
 
-        // Автоматическое воспроизведение при загрузке
-        window.addEventListener('load', function() {
-            startMusic.play().catch(e => console.log("Автовоспроизведение заблокировано"));
-        });
+        // Флаг, был ли уже клик по странице (для автовоспроизведения)
+        let userInteracted = false;
+
+        // Функция включения стартовой музыки при первом взаимодействии
+        function tryPlayStartMusic() {
+            if (!userInteracted) {
+                userInteracted = true;
+                startMusic.play().catch(e => console.log("Не удалось запустить стартовую музыку"));
+            }
+        }
+
+        // Вешаем обработчик на любой клик по документу
+        document.addEventListener('click', tryPlayStartMusic, { once: true });
 
         function nextScreen(screenNum) {
+            // Останавливаем все песни при переходе между экранами
+            stopAllSongs();
+            
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('sc' + screenNum).classList.add('active');
 
             if (screenNum === 2) {
-                startMusic.play().catch(e => console.log("Музыка запустится после взаимодействия"));
+                // Стартовая музыка уже играет (или начнёт при клике)
+                // Дополнительно не надо ничего делать
             }
         }
 
@@ -249,7 +256,10 @@
             startMusic.pause(); 
             romanticMusic.play().catch(e => console.log("Включилась романтичная музыка")); 
             
-            // Больше конфити со взрывом
+            // Останавливаем все песни плейлиста, если вдруг играли
+            stopPlaylistSongs();
+            
+            // Взрыв конфити
             confetti({
                 particleCount: 300,
                 spread: 120,
@@ -258,7 +268,6 @@
                 ticks: 200
             });
             
-            // Второй залп через 0.5 сек
             setTimeout(() => {
                 confetti({
                     particleCount: 200,
@@ -275,18 +284,28 @@
             nextScreen(3);
         }
 
-        function playSong(num) {
-            // Останавливаем романтическую музыку
-            romanticMusic.pause();
-            romanticMusic.currentTime = 0;
-            
-            // Останавливаем все песни
+        function stopPlaylistSongs() {
             song1.pause();
             song1.currentTime = 0;
             song2.pause();
             song2.currentTime = 0;
             song3.pause();
             song3.currentTime = 0;
+        }
+
+        function stopAllSongs() {
+            startMusic.pause();
+            romanticMusic.pause();
+            stopPlaylistSongs();
+        }
+
+        function playSong(num) {
+            // Останавливаем романтическую музыку
+            romanticMusic.pause();
+            romanticMusic.currentTime = 0;
+            
+            // Останавливаем все песни плейлиста
+            stopPlaylistSongs();
             
             // Играем выбранную
             switch(num) {
@@ -297,14 +316,11 @@
         }
 
         function openChoice(id) {
+            // Останавливаем любую играющую музыку при открытии новой секции
+            stopAllSongs();
+            
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            
-            if(id === 'choice-music') {
-                // Останавливаем романтическую музыку когда заходим в плейлист
-                romanticMusic.pause();
-                romanticMusic.currentTime = 0;
-            }
             
             if(id === 'choice-photos' || id === 'choice-letter') {
                 confetti({ particleCount: 50, spread: 60 });
@@ -312,6 +328,9 @@
         }
 
         function backToMenu() {
+            // Останавливаем всё
+            stopAllSongs();
+            
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('sc4').classList.add('active');
         }
