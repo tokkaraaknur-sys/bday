@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Все стили без изменений (такие же как у тебя) */
+        /* Все стили без изменений, как у тебя */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Montserrat', sans-serif;
@@ -95,13 +95,19 @@
             padding: 30px; border-radius: 15px; text-shadow: none; text-align: left; display: none;
             box-shadow: 0 10px 25px rgba(0,0,0,0.15); line-height: 1.6;
         }
+        .verse {
+            white-space: pre-line; /* чтобы переносы строк из HTML отображались */
+            font-style: italic;
+            margin-top: 20px;
+            padding-left: 10px;
+            border-left: 3px solid #ff6b6b;
+        }
     </style>
 </head>
 <body>
 
     <audio id="bg-romantic" src="alexgrohl-gentle-496449.mp3" loop></audio>
     <audio id="bg-start" src="Masha_i_Medved_-_S_Dnem_Rozhdeniya_MENYA_74147456.mp3" loop></audio>
-    <!-- Плейлист -->
     <audio id="song1" src="Rihanna_-_Disturbia_47962188.mp3"></audio>
     <audio id="song2" src="Rihanna - Rude Boy.mp3"></audio>
     <audio id="song3" src="Rihanna_-_Where_Have_You_Been_48211610.mp3"></audio>
@@ -202,15 +208,17 @@
         <div class="letter-box" id="l-box">
             <h3 style="margin-bottom: 15px; color: #ff6b6b; font-family: 'Caveat', cursive; font-size: 2.5rem;">Моя ослепительная и любимая Айзере!</h3>
             <p>С днём рождения, моя самая любимая подруга!<br><br>
-Я очень благодарна судьбе за то, что я когда то перевелась в ваш класс, а далее встретила тебя . Ты человек, который делает мою жизнь ярче, теплее и счастливее просто своим присутствием. Спасибо тебе за все наши разговоры до ночи, за смех до слёз, за поддержку в самые трудные моменты и за то, что рядом с тобой я всегда могу быть собой.<br><br>
-Я искренне желаю тебе огромного счастья, крепкого здоровья и исполнения всех твоих желаний. Пусть рядом будут только любящие и искренние люди, пусть каждый новый день приносит тебе по больше радости и множество поводов улыбаться. Ты заслуживаешь всего самого прекрасного в этом мире.<br><br>
-Помни, что я всегда буду рядом — в счастливые моменты, в сложные дни и во всех твоих новых начинаниях. Спасибо тебе за нашу дружбу. Для меня она бесценна.<br><br>
-Люблю тебя и очень дорожу тобой. С твоим днём, моя лучшая подруга! ❤️<br><br>
-Маленький стих:<br>
-Спасибо жизни за тебя,<br>
-За смех, поддержку и тепло.<br>
-Сквозь годы дружба наша крепнет,<br>
-И мне с тобой так повезло.</p>
+            Я очень благодарна судьбе за то, что я когда то перевелась в ваш класс, а далее встретила тебя . Ты человек, который делает мою жизнь ярче, теплее и счастливее просто своим присутствием. Спасибо тебе за все наши разговоры до ночи, за смех до слёз, за поддержку в самые трудные моменты и за то, что рядом с тобой я всегда могу быть собой.<br><br>
+            Я искренне желаю тебе огромного счастья, крепкого здоровья и исполнения всех твоих желаний. Пусть рядом будут только любящие и искренние люди, пусть каждый новый день приносит тебе по больше радости и множество поводов улыбаться. Ты заслуживаешь всего самого прекрасного в этом мире.<br><br>
+            Помни, что я всегда буду рядом — в счастливые моменты, в сложные дни и во всех твоих новых начинаниях. Спасибо тебе за нашу дружбу. Для меня она бесценна.<br><br>
+            Люблю тебя и очень дорожу тобой. С твоим днём, моя лучшая подруга! ❤️<br><br>
+            <strong>Маленький стих:</strong></p>
+            <div class="verse">
+                Спасибо жизни за тебя,<br>
+                За смех, поддержку и тепло.<br>
+                Сквозь годы дружба наша крепнет,<br>
+                И мне с тобой так повезло.
+            </div>
         </div>
         
         <button class="back-to-menu" onclick="backToMenu()">◀ Back to the menu</button>
@@ -225,41 +233,60 @@
         const song2 = document.getElementById('song2');
         const song3 = document.getElementById('song3');
 
-        // Флаг, был ли уже клик по странице (для автовоспроизведения)
-        let userInteracted = false;
-
-        // Функция включения стартовой музыки при первом взаимодействии
-        function tryPlayStartMusic() {
-            if (!userInteracted) {
-                userInteracted = true;
-                startMusic.play().catch(e => console.log("Не удалось запустить стартовую музыку"));
-            }
+        // ---------- УПРАВЛЕНИЕ МУЗЫКОЙ ----------
+        function stopAllMusic() {
+            startMusic.pause();
+            startMusic.currentTime = 0;
+            romanticMusic.pause();
+            romanticMusic.currentTime = 0;
+            song1.pause();
+            song1.currentTime = 0;
+            song2.pause();
+            song2.currentTime = 0;
+            song3.pause();
+            song3.currentTime = 0;
         }
 
-        // Вешаем обработчик на любой клик по документу
-        document.addEventListener('click', tryPlayStartMusic, { once: true });
+        function playStart() {
+            stopAllMusic();
+            startMusic.play().catch(() => {});
+        }
 
+        function playRomantic() {
+            stopAllMusic();
+            romanticMusic.play().catch(() => {});
+        }
+
+        // Автоматическое воспроизведение стартовой музыки при загрузке
+        window.addEventListener('load', function() {
+            // Нужен клик для первого воспроизведения (политика браузеров)
+            // Но мы попробуем сразу
+            startMusic.play().then(() => {
+                console.log('Стартовая музыка играет');
+            }).catch(() => {
+                // Если не вышло, то при первом клике по любой кнопке запустим
+                document.addEventListener('click', function firstClick() {
+                    if (startMusic.paused) {
+                        startMusic.play().catch(() => {});
+                    }
+                    document.removeEventListener('click', firstClick);
+                }, { once: true });
+            });
+        });
+
+        // ---------- ЭКРАНЫ ----------
         function nextScreen(screenNum) {
-            // Останавливаем все песни при переходе между экранами
-            stopAllSongs();
-            
+            stopAllMusic(); // Останавливаем всё при любом переходе
+            if (screenNum === 2) {
+                playStart(); // На экране с тортиком играем стартовую
+            }
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('sc' + screenNum).classList.add('active');
-
-            if (screenNum === 2) {
-                // Стартовая музыка уже играет (или начнёт при клике)
-                // Дополнительно не надо ничего делать
-            }
         }
 
         function clickCake() {
-            startMusic.pause(); 
-            romanticMusic.play().catch(e => console.log("Включилась романтичная музыка")); 
+            playRomantic();
             
-            // Останавливаем все песни плейлиста, если вдруг играли
-            stopPlaylistSongs();
-            
-            // Взрыв конфити
             confetti({
                 particleCount: 300,
                 spread: 120,
@@ -267,7 +294,6 @@
                 startVelocity: 45,
                 ticks: 200
             });
-            
             setTimeout(() => {
                 confetti({
                     particleCount: 200,
@@ -284,28 +310,15 @@
             nextScreen(3);
         }
 
-        function stopPlaylistSongs() {
+        function playSong(num) {
+            romanticMusic.pause(); // Останавливаем романтику
+            // Останавливаем все песни
             song1.pause();
             song1.currentTime = 0;
             song2.pause();
             song2.currentTime = 0;
             song3.pause();
             song3.currentTime = 0;
-        }
-
-        function stopAllSongs() {
-            startMusic.pause();
-            romanticMusic.pause();
-            stopPlaylistSongs();
-        }
-
-        function playSong(num) {
-            // Останавливаем романтическую музыку
-            romanticMusic.pause();
-            romanticMusic.currentTime = 0;
-            
-            // Останавливаем все песни плейлиста
-            stopPlaylistSongs();
             
             // Играем выбранную
             switch(num) {
@@ -316,9 +329,7 @@
         }
 
         function openChoice(id) {
-            // Останавливаем любую играющую музыку при открытии новой секции
-            stopAllSongs();
-            
+            stopAllMusic(); // Полная остановка при входе в любой раздел
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             
@@ -328,13 +339,12 @@
         }
 
         function backToMenu() {
-            // Останавливаем всё
-            stopAllSongs();
-            
+            stopAllMusic();
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('sc4').classList.add('active');
         }
 
+        // ---------- ФОТО ----------
         let zIndexCounter = 5;
         function moveCard(card) {
             card.style.transform = 'translateX(350px) rotate(20deg)';
@@ -348,6 +358,7 @@
             }, 400);
         }
 
+        // ---------- ПИСЬМО ----------
         function openLetter() {
             document.getElementById('env-wrap').style.display = 'none';
             document.getElementById('l-box').style.display = 'block';
