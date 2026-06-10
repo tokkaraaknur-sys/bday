@@ -3,101 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>С Днем Рождения! 🎁</title>
+    <title>Happy Birthday Aizere! 🎉</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            margin: 0; padding: 0;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%);
-            height: 100vh; display: flex; justify-content: center; align-items: center;
-            font-family: 'Segoe UI', Arial, sans-serif; overflow: hidden; color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.15);
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
         }
-        .game-container { text-align: center; max-width: 90%; }
-        
-        /* Стили для игры */
-        .cake-btn {
-            font-size: 7rem; cursor: pointer; user-select: none;
-            transition: transform 0.1s ease; display: inline-block;
-            margin: 20px 0; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
-        }
-        .cake-btn:active { transform: scale(0.8); }
-        .score-board { font-size: 1.8rem; font-weight: bold; margin-bottom: 10px; }
-        .hint { font-size: 1.2rem; opacity: 0.9; }
 
-        /* Стили для финального поздравления */
-        .hidden { display: none; }
-        .title { font-size: 3.5rem; margin-bottom: 15px; animation: bounce 2s infinite; }
-        .text { font-size: 1.8rem; line-height: 1.5; max-width: 600px; margin: 0 auto; }
-        
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        /* Общие стили для экранов */
+        .screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            transition: all 0.6s ease-in-out;
+            opacity: 0;
+            transform: scale(0.9);
+            pointer-events: none;
+        }
+        .screen.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        /* Экран 1: Начало */
+        .main-title { font-size: 3.5rem; margin-bottom: 10px; font-weight: 700; letter-spacing: 2px; }
+        .subtitle { font-size: 1.5rem; opacity: 0.9; margin-bottom: 30px; }
+        .next-btn {
+            padding: 15px 40px; font-size: 1.2rem; border: none; background: white;
+            color: #ff6b6b; border-radius: 50px; cursor: pointer; font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15); transition: 0.2s;
+        }
+        .next-btn:hover { transform: scale(1.05); }
+
+        /* Экран 2: Тортик */
+        .cake-btn { font-size: 7rem; cursor: pointer; user-select: none; margin: 20px 0; animation: pulse 1.5s infinite; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.15)); }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        /* Экран 3: These are for you */
+        .romantic-title { font-family: 'Caveat', cursive; font-size: 5rem; margin-bottom: 10px; }
+        .small-hint { font-size: 1.1rem; opacity: 0.8; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* Экран 4: Меню из 3 выборов */
+        .menu-container { display: flex; gap: 20px; width: 100%; max-width: 900px; justify-content: center; flex-wrap: wrap; }
+        .menu-card {
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 20px;
+            padding: 30px 20px; width: 250px; cursor: pointer; transition: 0.3s;
+        }
+        .menu-card:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.3); }
+        .menu-card i { font-size: 3rem; margin-bottom: 15px; color: white; }
+        .menu-card h3 { font-size: 1.3rem; margin-bottom: 10px; }
+        .back-to-menu { margin-top: 30px; background: rgba(0,0,0,0.1); border: 1px solid white; color: white; padding: 10px 25px; border-radius: 50px; cursor: pointer; }
+
+        /* Окно выбора 1: Музыка */
+        .music-list { width: 100%; max-width: 500px; text-align: left; background: rgba(255,255,255,0.15); padding: 20px; border-radius: 20px; }
+        .music-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        .music-item:last-child { border-bottom: none; }
+
+        /* Окно выбора 2: Полароид фотки */
+        .photo-stack { position: relative; width: 320px; height: 380px; margin-bottom: 20px; }
+        .polaroid {
+            position: absolute; width: 100%; height: 100%; background: white; padding: 15px 15px 45px 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); border-radius: 4px; transition: 0.5s; cursor: pointer;
+        }
+        .polaroid img { width: 100%; height: 280px; object-fit: cover; border: 1px solid #eee; }
+        .polaroid span { display: block; text-align: center; font-family: 'Caveat', cursive; color: #444; font-size: 1.8rem; margin-top: 10px; text-shadow: none; }
+        /* Красивое наложение карт друг на друга */
+        .p1 { transform: rotate(-6deg); z-index: 5; }
+        .p2 { transform: rotate(4deg); z-index: 4; }
+        .p3 { transform: rotate(-3deg); z-index: 3; }
+        .p4 { transform: rotate(5deg); z-index: 2; }
+        .p5 { transform: rotate(-2deg); z-index: 1; }
+
+        /* Окно выбора 3: Конверт с письмом */
+        .envelope-wrapper { position: relative; cursor: pointer; margin-bottom: 20px; }
+        .envelope { font-size: 6rem; transition: 0.3s; }
+        .letter-box {
+            max-width: 600px; max-height: 350px; overflow-y: auto; background: white; color: #333;
+            padding: 30px; border-radius: 15px; text-shadow: none; text-align: left; display: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); line-height: 1.6;
+        }
     </style>
 </head>
 <body>
 
-<div class="game-container">
-    <div id="game-block">
-        <div class="score-board">Собери угощения: <span id="score">0</span> / 10</div>
-        <p class="hint">Кликни по тортику 10 раз, чтобы открыть сюрприз! 🎂</p>
-        <div id="cake" class="cake-btn">🎂</div>
+    <audio id="bg-romantic" src="https://eu.hitmoz.com/song/28585709" loop></audio>
+    <audio id="bg-start" src="https://lmusic.kz/mp3/masha-i-medved-s-dnem-rozhdeniya/180293" loop></audio>
+
+    <div class="screen active" id="sc1">
+        <h1 class="main-title">Happy Birthday, Aizere! 🤍</h1>
+        <p class="subtitle">Этот скромный подарок создан специально для тебя...</p>
+        <button class="next-btn" onclick="nextScreen(2)">Open 🎁</button>
     </div>
 
-    <div id="congrats-block" class="hidden">
-        <h1 class="title">Happy Birthday! 🎉</h1>
-        <p class="text">Ты прошла эту сложнейшую игру! Настоящая чемпионка! 🏆<br><br>
-        С днем рождения, моя любимая лучшая подруга! Желаю тебе бесконечного счастья, улыбок и чтобы все твои мечты сбывались! ❤️✨</p>
+    <div class="screen" id="sc2">
+        <h2 class="main-title" style="font-size: 2.2rem;">Click on this cake... 👇</h2>
+        <div class="cake-btn" onclick="clickCake()">🎂</div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <div class="screen" id="sc3">
+        <h1 class="romantic-title">these are for you</h1>
+        <button class="next-btn" onclick="nextScreen(4)">To see ✨</button>
+        <p class="small-hint">Click to open three choices</p>
+    </div>
 
-<audio id="music" src="https://dl.musicdream.cc/files/masha_i_medved_-_pesenka_pro_den_rozhdeniya_(musicdream.cc).mp3" loop></audio>
+    <div class="screen" id="sc4">
+        <h2 class="subtitle" style="margin-bottom: 40px; font-weight: 600;">Choose a gift:</h2>
+        <div class="menu-container">
+            <div class="menu-card" onclick="openChoice('choice-music')">
+                <i class="fa-solid fa-music"></i>
+                <h3>Favorite music</h3>
+                <p>Playlist for your mood</p>
+            </div>
+            <div class="menu-card" onclick="openChoice('choice-photos')">
+                <i class="fa-solid fa-heart"></i>
+                <h3>Our moments</h3>
+                <p>5 warmest joint photos</p>
+            </div>
+            <div class="menu-card" onclick="openChoice('choice-letter')">
+                <i class="fa-solid fa-envelope-open-text"></i>
+                <h3>My letter</h3>
+                <p>A few sincere words for you</p>
+            </div>
+        </div>
+    </div>
 
-<script>
-    let score = 0;
-    const targetScore = 10;
-    const cake = document.getElementById('cake');
-    const scoreDisplay = document.getElementById('score');
-    const gameBlock = document.getElementById('game-block');
-    const congratsBlock = document.getElementById('congrats-block');
-    const music = document.getElementById('music');
+    <div class="screen" id="choice-music">
+        <h2 class="main-title" style="font-size: 2.2rem; margin-bottom: 20px;">Your playlist 🎵</h2>
+        <div class="music-list">
+            <div class="music-item">
+                <span>1. Название песни — Исполнитель</span>
+                <audio controls><source src="https://lmusic.kz/mp3/rihanna-disturbia/229268" type="audio/mpeg"></audio>
+            </div>
+            <div class="music-item">
+                <span>2. Название песни — Исполнитель</span>
+                <audio controls><source src="https://lmusic.kz/mp3/rihanna-rude-boy/107796" type="audio/mpeg"></audio>
+            </div>
+            <div class="music-item">
+                <span>3. Название песни — Исполнитель</span>
+                <audio controls><source src="https://lmusic.kz/mp3/rihanna-where-have-you-been/101290" type="audio/mpeg"></audio>
+            </div>
+        </div>
+        <button class="back-to-menu" onclick="backToMenu()">◀ Back to the menu</button>
+    </div>
 
-    const emojis = ['🎂', '🧁', '🍰', '🍩', '🍪', '🍬'];
+    <div class="screen" id="choice-photos">
+        <h2 class="main-title" style="font-size: 2.2rem; margin-bottom: 10px;">Our memories 📸</h2>
+        <p style="margin-bottom: 25px; opacity: 0.8; font-size: 0.9rem;">(Кликай по верхней фотке, чтобы убрать её назад)</p>
+        
+        <div class="photo-stack">
+            <div class="polaroid p1" onclick="moveCard(this)">
+                <img src="file:///C:/Users/tokka/AppData/Local/Packages/Microsoft.ScreenSketch_8wekyb3d8bbwe/TempState/Снимок%20экрана%202026-06-10%20143554.png" alt="Фото 1">
+                <span>Вместе веселее! 🤍</span>
+            </div>
+            <div class="polaroid p2" onclick="moveCard(this)">
+                <img src="file:///C:/Users/tokka/OneDrive/Pictures/WhatsApp%20Image%202026-06-10%20at%202.33.31%20PM%20(2).jpeg" alt="Фото 2">
+                <span>Тот самый день ✨</span>
+            </div>
+            <div class="polaroid p3" onclick="moveCard(this)">
+                <img src="file:///C:/Users/tokka/OneDrive/Pictures/WhatsApp%20Image%202026-06-10%20at%202.33.31%20PM%20(3).jpeg" alt="Фото 3">
+                <span>Любимый момент 🥐</span>
+            </div>
+            <div class="polaroid p4" onclick="moveCard(this)">
+                <img src="file:///C:/Users/tokka/OneDrive/Pictures/WhatsApp%20Image%202026-06-10%20at%202.33.31%20PM%20(4).jpeg" alt="Фото 4">
+                <span>Самые лучшие 🥰</span>
+            </div>
+            <div class="polaroid p5" onclick="moveCard(this)">
+                <img src="file:///C:/Users/tokka/OneDrive/Pictures/WhatsApp%20Image%202026-06-10%20at%202.33.31%20PM.jpeg" alt="Фото 5">
+                <span>Навечно подруги Нажми!</span>
+            </div>
+        </div>
+        
+        <button class="back-to-menu" onclick="backToMenu()">◀ Back to the menu</button>
+    </div>
 
-    cake.addEventListener('click', () => {
-        score++;
-        scoreDisplay.textContent = score;
+    <div class="screen" id="choice-letter">
+        <div class="envelope-wrapper" id="env-wrap" onclick="openLetter()">
+            <div class="envelope">✉️</div>
+            <p style="margin-top: 10px;">Click to open the letter</p>
+        </div>
+        
+        <div class="letter-box" id="l-box">
+            <h3 style="margin-bottom: 15px; color: #ff6b6b; font-family: 'Caveat', cursive; font-size: 2.5rem;">Дорогая Айзере!</h3>
+            <p>Здесь будет твое длинное и милое письмо для неё. Ты можешь написать абсолютно всё, что пожелаешь! Этот блок имеет прокрутку, так что текст может быть любого объема. Текст будет выглядеть очень стильно и аккуратно на белом фоне карточки.</p>
+        </div>
+        
+        <button class="back-to-menu" onclick="backToMenu()">◀ Back to the menu</button>
+    </div>
 
-        const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-        cake.textContent = randomEmoji;
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-        if (score >= targetScore) {
-            endGame();
+    <script>
+        const startMusic = document.getElementById('bg-start');
+        const romanticMusic = document.getElementById('bg-romantic');
+
+        // Функция переключения экранов
+        function nextScreen(screenNum) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('sc' + screenNum).classList.add('active');
+
+            // На первом шаге запускаем стартовую музыку (например Маша и Медведь)
+            if (screenNum === 2) {
+                startMusic.play().catch(e => console.log("Музыка запустится после взаимодействия"));
+            }
         }
-    });
 
-    function endGame() {
-        gameBlock.classList.add('hidden');
-        congratsBlock.classList.remove('hidden');
-        
-        // Включаем музыку Маши
-        music.play().catch(e => console.log("Ошибка воспроизведения аудио:", e));
-        
-        launchConfetti();
-    }
-
-    function launchConfetti() {
-        let duration = 12 * 1000; // Конфетти будет сыпаться чуть дольше, под стать песне
-        let animationEnd = Date.now() + duration;
-        let defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 999 };
-
-        let interval = setInterval(function() {
-            let timeLeft = animationEnd - Date.now();
-            if (timeLeft <= 0) return clearInterval(interval);
-            let particleCount = 50 * (timeLeft / duration);
+        // Действие при клике на тортик
+        function clickCake() {
+            startMusic.pause(); // Выключаем стартовую музыку
+            romanticMusic.play().catch(e => console.log("Включилась романтичная музыка")); // Включаем романтичную
             
-            confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random(), y: Math.random() - 0.2 } }));
-        }, 250);
-    }
-</script>
+            // Взрыв конфетти
+            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+            
+            // Переходим к "these are for you"
+            nextScreen(3);
+        }
+
+        // Открытие одного из 3 выборов
+        function openChoice(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            if(id === 'choice-photos' || id === 'choice-letter') {
+                // Добавим немного легких конфетти для настроения при открытии подарков
+                confetti({ particleCount: 30, angle: 60, spread: 55, origin: { x: 0 } });
+                confetti({ particleCount: 30, angle: 120, spread: 55, origin: { x: 1 } });
+            }
+        }
+
+        // Кнопка назад в главное меню выбора
+        function backToMenu() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('sc4').classList.add('active');
+        }
+
+        // Логика перелистывания палароид-карточек (кидает верхнюю карту вниз стопки)
+        let zIndexCounter = 5;
+        function moveCard(card) {
+            card.style.transform = 'translateX(350px) rotate(20deg)';
+            card.style.opacity = '0';
+            
+            setTimeout(() => {
+                zIndexCounter--;
+                card.style.zIndex = zIndexCounter - 10;
+                card.style.transform = card.classList.contains('p1') || card.classList.contains('p3') || card.classList.contains('p5') ? 'rotate(-4deg)' : 'rotate(4deg)';
+                card.style.opacity = '1';
+            }, 400);
+        }
+
+        // Открытие конверта с письмом
+        function openLetter() {
+            document.getElementById('env-wrap').style.display = 'none';
+            document.getElementById('l-box').style.display = 'block';
+            confetti({ particleCount: 50, spread: 60 });
+        }
+    </script>
 </body>
 </html>
