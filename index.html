@@ -43,9 +43,9 @@
             pointer-events: auto;
         }
 
-        /* Экран 1: Начало */
-        .main-title { font-size: 3.5rem; margin-bottom: 10px; font-weight: 700; letter-spacing: 2px; }
-        .subtitle { font-size: 1.5rem; opacity: 0.9; margin-bottom: 30px; }
+        /* Экран 1 */
+        .main-title { font-size: 3rem; margin-bottom: 10px; font-weight: 700; letter-spacing: 2px; }
+        .subtitle { font-size: 1.4rem; opacity: 0.9; margin-bottom: 30px; }
         .next-btn {
             padding: 15px 40px; font-size: 1.2rem; border: none; background: white;
             color: #ff6b6b; border-radius: 50px; cursor: pointer; font-weight: bold;
@@ -57,11 +57,11 @@
         .cake-btn { font-size: 7rem; cursor: pointer; user-select: none; margin: 20px 0; animation: pulse 1.5s infinite; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.15)); }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-        /* Экран 3: These are for you */
+        /* Экран 3 */
         .romantic-title { font-family: 'Caveat', cursive; font-size: 5rem; margin-bottom: 10px; }
         .small-hint { font-size: 1.1rem; opacity: 0.8; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* Экран 4: Меню из 3 выборов */
+        /* Экран 4: Меню */
         .menu-container { display: flex; gap: 20px; width: 100%; max-width: 900px; justify-content: center; flex-wrap: wrap; }
         .menu-card {
             background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
@@ -73,12 +73,13 @@
         .menu-card h3 { font-size: 1.3rem; margin-bottom: 10px; }
         .back-to-menu { margin-top: 30px; background: rgba(0,0,0,0.1); border: 1px solid white; color: white; padding: 10px 25px; border-radius: 50px; cursor: pointer; }
 
-        /* Окно выбора 1: Музыка */
+        /* Раздел: Музыка */
         .music-list { width: 100%; max-width: 500px; text-align: left; background: rgba(255,255,255,0.15); padding: 20px; border-radius: 20px; }
         .music-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.2); }
         .music-item:last-child { border-bottom: none; }
+        .music-item span { font-size: 0.95rem; font-weight: 600; padding-right: 10px; }
 
-        /* Окно выбора 2: Полароид фотки */
+        /* Раздел: Фотографии */
         .photo-stack { position: relative; width: 320px; height: 380px; margin-bottom: 20px; }
         .polaroid {
             position: absolute; width: 100%; height: 100%; background: white; padding: 15px 15px 45px 15px;
@@ -86,14 +87,14 @@
         }
         .polaroid img { width: 100%; height: 280px; object-fit: cover; border: 1px solid #eee; }
         .polaroid span { display: block; text-align: center; font-family: 'Caveat', cursive; color: #444; font-size: 1.8rem; margin-top: 10px; text-shadow: none; }
-        /* Красивое наложение карт друг на друга */
+        
         .p1 { transform: rotate(-6deg); z-index: 5; }
         .p2 { transform: rotate(4deg); z-index: 4; }
         .p3 { transform: rotate(-3deg); z-index: 3; }
         .p4 { transform: rotate(5deg); z-index: 2; }
         .p5 { transform: rotate(-2deg); z-index: 1; }
 
-        /* Окно выбора 3: Конверт с письмом */
+        /* Раздел: Письмо */
         .envelope-wrapper { position: relative; cursor: pointer; margin-bottom: 20px; }
         .envelope { font-size: 6rem; transition: 0.3s; }
         .letter-box {
@@ -150,15 +151,15 @@
         <h2 class="main-title" style="font-size: 2.2rem; margin-bottom: 20px;">Your playlist 🎵</h2>
         <div class="music-list">
             <div class="music-item">
-                <span>1. Название песни — Исполнитель</span>
+                <span>1. Rihanna — Disturbia</span>
                 <audio controls><source src="https://lmusic.kz/mp3/rihanna-disturbia/229268" type="audio/mpeg"></audio>
             </div>
             <div class="music-item">
-                <span>2. Название песни — Исполнитель</span>
+                <span>2. Rihanna — Rude Boy</span>
                 <audio controls><source src="https://lmusic.kz/mp3/rihanna-rude-boy/107796" type="audio/mpeg"></audio>
             </div>
             <div class="music-item">
-                <span>3. Название песни — Исполнитель</span>
+                <span>3. Rihanna — Where Have You Been</span>
                 <audio controls><source src="https://lmusic.kz/mp3/rihanna-where-have-you-been/101290" type="audio/mpeg"></audio>
             </div>
         </div>
@@ -171,24 +172,24 @@
         
         <div class="photo-stack">
             <div class="polaroid p1" onclick="moveCard(this)">
-                <img src="file:///C:/Users/tokka/AppData/Local/Packages/Microsoft.ScreenSketch_8wekyb3d8bbwe/TempState/Снимок%20экрана%202026-06-10%20143554.png" alt="Фото 1">
+                <img src="1.png" alt="Фото 1">
                 <span>Вместе веселее! 🤍</span>
             </div>
             <div class="polaroid p2" onclick="moveCard(this)">
-                <img src="file:///C:/Users/tokka/OneDrive/Pictures/WhatsApp%20Image%202026-06-10%20at%202.33.31%20PM%20(2).jpeg" alt="Фото 2">
+                <img src="2.jpeg" alt="Фото 2">
                 <span>Тот самый день ✨</span>
             </div>
             <div class="polaroid p3" onclick="moveCard(this)">
-                <img src="file:///C:/Users/tokka/OneDrive/Pictures/WhatsApp%20Image%202026-06-10%20at%202.33.31%20PM%20(3).jpeg" alt="Фото 3">
+                <img src="3.jpeg" alt="Фото 3">
                 <span>Любимый момент 🥐</span>
             </div>
             <div class="polaroid p4" onclick="moveCard(this)">
-                <img src="file:///C:/Users/tokka/OneDrive/Pictures/WhatsApp%20Image%202026-06-10%20at%202.33.31%20PM%20(4).jpeg" alt="Фото 4">
+                <img src="4.jpeg" alt="Фото 4">
                 <span>Самые лучшие 🥰</span>
             </div>
             <div class="polaroid p5" onclick="moveCard(this)">
-                <img src="file:///C:/Users/tokka/OneDrive/Pictures/WhatsApp%20Image%202026-06-10%20at%202.33.31%20PM.jpeg" alt="Фото 5">
-                <span>Навечно подруги Нажми!</span>
+                <img src="5.jpeg" alt="Фото 5">
+                <span>Навечно подруги! 👭</span>
             </div>
         </div>
         
@@ -215,48 +216,38 @@
         const startMusic = document.getElementById('bg-start');
         const romanticMusic = document.getElementById('bg-romantic');
 
-        // Функция переключения экранов
         function nextScreen(screenNum) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('sc' + screenNum).classList.add('active');
 
-            // На первом шаге запускаем стартовую музыку (например Маша и Медведь)
             if (screenNum === 2) {
                 startMusic.play().catch(e => console.log("Музыка запустится после взаимодействия"));
             }
         }
 
-        // Действие при клике на тортик
         function clickCake() {
-            startMusic.pause(); // Выключаем стартовую музыку
-            romanticMusic.play().catch(e => console.log("Включилась романтичная музыка")); // Включаем романтичную
+            startMusic.pause(); 
+            romanticMusic.play().catch(e => console.log("Включилась романтичная музыка")); 
             
-            // Взрыв конфетти
             confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-            
-            // Переходим к "these are for you"
             nextScreen(3);
         }
 
-        // Открытие одного из 3 выборов
         function openChoice(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             
             if(id === 'choice-photos' || id === 'choice-letter') {
-                // Добавим немного легких конфетти для настроения при открытии подарков
                 confetti({ particleCount: 30, angle: 60, spread: 55, origin: { x: 0 } });
                 confetti({ particleCount: 30, angle: 120, spread: 55, origin: { x: 1 } });
             }
         }
 
-        // Кнопка назад в главное меню выбора
         function backToMenu() {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('sc4').classList.add('active');
         }
 
-        // Логика перелистывания палароид-карточек (кидает верхнюю карту вниз стопки)
         let zIndexCounter = 5;
         function moveCard(card) {
             card.style.transform = 'translateX(350px) rotate(20deg)';
@@ -270,7 +261,6 @@
             }, 400);
         }
 
-        // Открытие конверта с письмом
         function openLetter() {
             document.getElementById('env-wrap').style.display = 'none';
             document.getElementById('l-box').style.display = 'block';
